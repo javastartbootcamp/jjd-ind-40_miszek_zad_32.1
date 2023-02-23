@@ -2,6 +2,7 @@ package pl.javastart.streamstask;
 
 import java.math.BigDecimal;
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class StreamsTask {
@@ -64,8 +65,10 @@ public class StreamsTask {
             .collect(Collectors.groupingBy(expense -> getUser(expense.getUserId(), users)));
     }
 
-    private static User getUser(Long id, Collection<User> users) {
-        return users.stream().filter(u-> Objects.equals(u.getId(), id)).toList().get(0);
+    private User getUser(Long id, Collection<User> users) {
+        return users.stream()
+            .collect(Collectors.toMap(User::getId, Function.identity()))
+            .get(id);
     }
 
     private static List<Expense> getExpenseByUserId(Long userId, List<Expense> expenses) {
