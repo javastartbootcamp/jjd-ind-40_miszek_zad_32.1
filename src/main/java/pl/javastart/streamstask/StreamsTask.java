@@ -52,10 +52,16 @@ public class StreamsTask {
             .orElse(0);
     }
 
-    // metoda powinna zwracać wydatki zgrupowane po ID użytkownika
+//     metoda powinna zwracać wydatki zgrupowane po ID użytkownika
     Map<Long, List<Expense>> groupExpensesByUserId(Collection<User> users, List<Expense> expenses) {
         return expenses.stream()
             .collect(Collectors.groupingBy(Expense::getUserId));
+    }
+
+    private List<Expense> getExpenseByUserId(Long userId, List<Expense> expenses) {
+        return expenses.stream()
+            .filter(e -> Objects.equals(e.getUserId(), userId))
+            .toList();
     }
 
     // metoda powinna zwracać wydatki zgrupowane po użytkowniku
@@ -70,13 +76,4 @@ public class StreamsTask {
             .collect(Collectors.toMap(User::getId, Function.identity()))
             .get(id);
     }
-
-    private static List<Expense> getExpenseByUserId(Long userId, List<Expense> expenses) {
-        return expenses.stream()
-            .filter(e -> Objects.equals(e.getUserId(), userId))
-            .toList();
-    }
-
-
-
 }
