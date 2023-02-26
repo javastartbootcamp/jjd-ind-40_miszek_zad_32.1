@@ -58,22 +58,12 @@ public class StreamsTask {
             .collect(Collectors.groupingBy(Expense::getUserId));
     }
 
-    private List<Expense> getExpenseByUserId(Long userId, List<Expense> expenses) {
-        return expenses.stream()
-            .filter(e -> Objects.equals(e.getUserId(), userId))
-            .toList();
-    }
-
     // metoda powinna zwracać wydatki zgrupowane po użytkowniku
     // podobne do poprzedniego, ale trochę trudniejsze
     Map<User, List<Expense>> groupExpensesByUser(Collection<User> users, List<Expense> expenses) {
+        Map<Long, User> usersMap = users.stream()
+            .collect(Collectors.toMap(User::getId, Function.identity()));
         return expenses.stream()
-            .collect(Collectors.groupingBy(expense -> getUser(expense.getUserId(), users)));
-    }
-
-    private User getUser(Long id, Collection<User> users) {
-        return users.stream()
-            .collect(Collectors.toMap(User::getId, Function.identity()))
-            .get(id);
+            .collect(Collectors.groupingBy(expense -> usersMap.get(expense.getUserId())));
     }
 }
